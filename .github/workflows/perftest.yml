@@ -42,12 +42,8 @@ jobs:
         run: docker ps;cat "$HOME/.benchvars" && . "$HOME/.benchvars" && ./jmx-files-maven-ul.sh "$TARGET_HOST" "$TARGET_PORT" 30 maven-dyn;docker ps
         #TODO: with timeout
         working-directory: benchmarks/loadtests
-      - name Try git commit
-        run: ls
-# && pwd 
-#&& source $HOME/.benchvars
-# && git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench 
-#&& cd bench && cp -fv ../last_test_result/statistics.json ./  && ls -lah && pwd && git add -f statistics.json && git commit -m test && git push origin master && env
+      - name: Try git commit
+        run: ls -lah && pwd && source $HOME/.benchvars && git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench && cd bench && cp -fv ../last_test_result/statistics.json ./  && ls -lah && pwd && git add -f statistics.json && git commit -m test && git push origin master && env
         working-directory: benchmarks/loadtests
       - name: Stop artipie server
         run: docker ps;echo docker stop artipie; ls -lah; echo rm -rfv root
