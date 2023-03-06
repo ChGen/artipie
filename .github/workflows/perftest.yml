@@ -43,7 +43,8 @@ jobs:
         #TODO: with timeout
         working-directory: benchmarks/loadtests
       - name Try git commit
-        run: ls -lah && pwd && . $HOME/.benchvars && git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench && cd bench && cp -fv ../last_test_result/statistics.json ./  && ls -lah && pwd && git add -f statistics.json && git commit -m test && git push origin master && env
+        run: ls -lah && pwd && . $HOME/.benchvars && git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench 
+#&& cd bench && cp -fv ../last_test_result/statistics.json ./  && ls -lah && pwd && git add -f statistics.json && git commit -m test && git push origin master && env
         working-directory: benchmarks/loadtests
       - name: Stop artipie server
         run: docker ps;echo docker stop artipie; ls -lah; echo rm -rfv root
