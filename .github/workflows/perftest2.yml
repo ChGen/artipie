@@ -4,9 +4,10 @@ on:
     tags:
       - "t*"
   workflow_run:
-    workflows: [ perftest ]
-    types:
-      - completed
+    workflows: [ Do performance testing for artipie ]
+    types: [ completed ]
+    branches: [ ech-dev ]
+    
 jobs:
   perf-test2:
     #if: ${{ github.event.workflow_run.conclusion == 'success' }}
