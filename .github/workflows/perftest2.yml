@@ -1,8 +1,5 @@
 name: Artipie perftest part 2
 on:
-  push:
-    tags:
-      - "t*"
   workflow_run:
     workflows: [ Do performance testing for artipie ]
     types: [ completed ]
