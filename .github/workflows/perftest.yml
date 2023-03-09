@@ -35,7 +35,7 @@ jobs:
         run: pwd;ls -lah;git branch -a;git fetch;git checkout ech-no-auto-rm && git pull --ff-only && cd loadtests && ./artipie-docker.sh 8081 && docker ps && tree ./root && ls -lah root/var/repo/artipie
         working-directory: benchmarks
       - name: Prepare JMeter
-        run: docker ps && wget https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.5.tgz && tar xf apache-jmeter-5.5.tgz && docker ps
+        run: [ ! -f $HOME/apache-jmeter-5.5.tgz ] && wget https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.5.tgz -O $HOME/apache-jmeter-5.5.tgz; tar xf $HOME/apache-jmeter-5.5.tgz && docker ps
         working-directory: benchmarks/loadtests
       - name: Prepare artifacts repo
         run: ./prep-maven-dyn.py --total-artifacts 12 && docker ps
