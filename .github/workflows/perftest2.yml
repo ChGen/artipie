@@ -3,7 +3,7 @@ on:
   workflow_run:
     workflows: [ Do performance testing for artipie ]
     types: [ completed ]
-    branches: [ ech-dev ]
+    branches: [ ech-dev, "t*" ]
     
 jobs:
   perf-test2:
