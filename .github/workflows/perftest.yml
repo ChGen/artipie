@@ -28,7 +28,7 @@ jobs:
       - run: docker info
 #      - run: echo mvn versions:set -DnewVersion=latest
       - run: bash -c 'docker stop artipie;docker image rm -f artipie/artipie:1.0-SNAPSHOT || :'
-      - run: mvn clean install -Pqulice
+      - run: mvn clean install
       - run: docker image inspect artipie/artipie:1.0-SNAPSHOT|head -n50
       - run: git clone https://github.com/artipie/benchmarks.git
       - name: Branch + Artipie server
