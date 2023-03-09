@@ -30,7 +30,7 @@ jobs:
       - run: bash -c 'docker stop artipie;docker image rm -f artipie/artipie:1.0-SNAPSHOT || :'
       - run: mvn clean install -Pqulice
       - run: docker image inspect artipie/artipie:1.0-SNAPSHOT|head -n50
-      - run: bash -c 'if [ -d ./benchmarks ] ; then echo "Reusing benchmarks"; else git clone https://github.com/artipie/benchmarks.git; fi'
+      - run: git clone https://github.com/artipie/benchmarks.git
       - name: Branch + Artipie server
         run: pwd;ls -lah;git branch -a;git fetch;git checkout ech-no-auto-rm && git pull --ff-only && cd loadtests && ./artipie-docker.sh 8081 && docker ps && tree ./root && ls -lah root/var/repo/artipie
         working-directory: benchmarks
