@@ -1,7 +1,7 @@
 name: Artipie perftest part 2
 on:
   workflow_run:
-    workflows: ["perf-test1", "Do performance testing for artipie"]
+    workflows: [ perftest ]
     types:
       - completed
 jobs:
