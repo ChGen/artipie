@@ -6,7 +6,7 @@ on:
       - completed
 jobs:
   perf-test1:
-  if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: [self-hosted]
     steps:
       - uses: actions/checkout@v3
