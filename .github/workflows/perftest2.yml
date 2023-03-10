@@ -8,7 +8,7 @@ on:
 jobs:
   perf-test2:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    runs-on: [wsl-server]
+    runs-on: [wsl-client]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -17,5 +17,5 @@ jobs:
       - run: env
         name: 1st step of stage2
       - name: 2nd step of stage2
-        run: env; ls -la; pwd; env > /tmp/perftest2.log; ls -lah >> /tmp/perftest2.log; date>>/tmp/perftest2.log; git show HEAD >> /tmp/perftest2.log; git tag --points-at HEAD >>  /tmp/perftest2.log;
+        run: env; ls -la; pwd; env > /tmp/perftest2.log; ls -lah >> /tmp/perftest2.log; date>>/tmp/perftest2.log; git show --summary HEAD >> /tmp/perftest2.log; git tag --points-at HEAD >>  /tmp/perftest2.log;
 
