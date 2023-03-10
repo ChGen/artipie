@@ -18,4 +18,8 @@ jobs:
         name: 1st step of stage2
       - name: 2nd step of stage2
         run: env; ls -la; pwd; env > /tmp/perftest2.log; ls -lah >> /tmp/perftest2.log; date>>/tmp/perftest2.log; git show --summary HEAD >> /tmp/perftest2.log; git tag --points-at HEAD >>  /tmp/perftest2.log;
+      - name: Check variables
+        run: test ! -f $HOME/.benchvars && exit 1;exit 0
+      - name: Check connection
+        run: . "$HOME/.benchvars" && curl -v "http://$TARGET_HOST:$TARGET_PORT/chgen/bintest"
 
