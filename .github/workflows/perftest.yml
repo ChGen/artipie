@@ -35,7 +35,7 @@ jobs:
         #TODO: with timeout
         working-directory: benchmarks/loadtests
       - name: Check git tag
-        run: git tag --points-at HEAD
+        run: ls -lah;git tag -l; git branch -a;git tag --points-at HEAD
         working-directory: benchmarks/loadtests
       - name: Check env tag
         run: bash -c 'echo ${GITHUB_REF##refs/tags/}'
