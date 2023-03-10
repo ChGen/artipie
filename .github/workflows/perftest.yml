@@ -28,7 +28,7 @@ jobs:
       - run: docker info
 #      - run: echo mvn versions:set -DnewVersion=latest
       - name: Check variables
-        run: test ! -f $HOME/.benchvars && exit 1
+        run: test ! -f $HOME/.benchvars && exit 1;exit 0
       - name: Check docker
         run: bash -c 'docker stop artipie;docker image rm -f artipie/artipie:1.0-SNAPSHOT || :'
       - name: Maven build
