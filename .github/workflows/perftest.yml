@@ -28,15 +28,15 @@ jobs:
       - run: docker info
 #      - run: echo mvn versions:set -DnewVersion=latest
       - name: Check variables
-      - run: test ! -f $HOME/.benchvars && exit 1
+        run: test ! -f $HOME/.benchvars && exit 1
       - name: Check docker
-      - run: bash -c 'docker stop artipie;docker image rm -f artipie/artipie:1.0-SNAPSHOT || :'
+        run: bash -c 'docker stop artipie;docker image rm -f artipie/artipie:1.0-SNAPSHOT || :'
       - name: Maven build
-      - run: mvn clean install
+        run: mvn clean install
       - name: Check docker image
-      - run: docker image inspect artipie/artipie:1.0-SNAPSHOT|head -n50
+        run: docker image inspect artipie/artipie:1.0-SNAPSHOT|head -n50
       - name: Checkout results repo/branch
-      - run: git clone https://github.com/artipie/benchmarks.git
+        run: git clone https://github.com/artipie/benchmarks.git
       - name: Branch + Artipie server
         run: pwd;ls -lah;git branch -a;git fetch;git checkout ech-no-auto-rm && git pull --ff-only && cd loadtests && ./artipie-docker.sh 8081 && docker ps && tree ./root && ls -lah root/var/repo/artipie
         working-directory: benchmarks
