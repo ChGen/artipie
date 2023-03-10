@@ -5,7 +5,7 @@ on:
       - "t*"
 jobs:
   perf-test1:
-    runs-on: [self-hosted]
+    runs-on: [wsl-server]
     steps:
       - uses: actions/checkout@v3
         #with:
