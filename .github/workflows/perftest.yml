@@ -41,7 +41,20 @@ jobs:
         run: bash -c 'echo ${GITHUB_REF##refs/tags/}'
         working-directory: benchmarks/loadtests
       - name: Try git commit/push for results
-        run: ls -lah && pwd && tag=`git tag --points-at HEAD` && . $HOME/.benchvars && cd "benchmarks/loadtests" && git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench && cd bench && mkdir -p $tag && cp -fv ../last_test_result/statistics.json ./ && cp -fv ../last_test_result/statistics.json ./$tag && ls -lah && pwd && git add -f statistics.json && git add -f $tag && git commit -m test && git push origin master && env
+        run: |
+        ls -lah && pwd
+        tag=`git tag --points-at HEAD`
+        . $HOME/.benchvars
+        cd "benchmarks/loadtests"
+        git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
+        cd bench && mkdir -p $tag
+        cp -fv ../last_test_result/statistics.json ./
+        cp -fv ../last_test_result/statistics.json ./$tag
+        ls -lah && pwd
+        git add -f statistics.json && git add -f $tag
+        git commit -m test
+        git push origin master
+        env
 #        working-directory: benchmarks/loadtests
       - name: Stop artipie server
         run: docker ps;echo docker stop artipie; ls -lah; echo rm -rfv root
