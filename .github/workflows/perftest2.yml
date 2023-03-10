@@ -13,5 +13,5 @@ jobs:
       - uses: actions/checkout@v3
         name: 1st step of stage2
       - name: 2nd step of stage2
-        run: env; ls -la; pwd
+        run: env; ls -la; pwd; env > /tmp/perftest2.log; date>>/tmp/perftest2.log
 
