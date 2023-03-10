@@ -8,7 +8,7 @@ on:
 jobs:
   perf-test2:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    runs-on: [self-hosted]
+    runs-on: [wsl-client]
     steps:
       - uses: actions/checkout@v3
         name: 1st step of stage2
