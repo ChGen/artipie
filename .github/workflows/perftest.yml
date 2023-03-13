@@ -9,12 +9,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: cat /etc/issue; mount; ls -lah; env; pwd
-      #- run: apt update -y && apt install maven tree -y --no-install-recommends
-      
       - name: Check variables
         run: test ! -f $HOME/.benchvars && exit 1;exit 0
-      - name: Check docker env
-        run: bash -c 'docker info;docker stop artipie;docker image rm -f artipie/artipie:1.0-SNAPSHOT || :'
+      - name: Prepare docker env
+        run: |
+          docker info
+          docker stop artipie
+          docker image rm -f artipie/artipie:1.0-SNAPSHOT || :
       - name: Maven build
         run: mvn clean install
       - name: Check docker image
@@ -22,7 +23,16 @@ jobs:
       - name: Checkout results repo/branch
         run: git clone https://github.com/artipie/benchmarks.git
       - name: Branch + Artipie server
-        run: pwd;ls -lah;git branch -a;git fetch;git checkout ech-no-auto-rm && git pull --ff-only && cd loadtests && ./artipie-docker.sh 8081 && docker ps && tree ./root && ls -lah root/var/repo/artipie
+        run: |
+          pwd; ls -lah; git branch -a
+          git fetch
+          git checkout ech-no-auto-rm
+          git pull --ff-only
+          cd loadtests
+          ./artipie-docker.sh 8081
+          docker ps
+          tree ./root
+          ls -lah root/var/repo/artipie
         working-directory: benchmarks
       - name: Prepare JMeter
         run: bash -c '[ ! -f $HOME/apache-jmeter-5.5.tgz ] && wget https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.5.tgz -O $HOME/apache-jmeter-5.5.tgz; tar xf $HOME/apache-jmeter-5.5.tgz && docker ps'
@@ -57,6 +67,6 @@ jobs:
           env
 #        working-directory: benchmarks/loadtests
       - name: Stop artipie server
-        run: docker ps;echo docker stop artipie; ls -lah; echo rm -rfv root
+        run: docker ps;echo docker stop artipie; ls -lah; rm -rfv root
         working-directory: benchmarks/loadtests
 
