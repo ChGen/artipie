@@ -30,6 +30,7 @@ jobs:
           docker stop artipie || :
           docker rm -fv artipie || :
           docker image rm -f artipie/artipie:1.0-SNAPSHOT || :
+          docker ps
       - name: Maven build
         run: mvn clean install
       - name: Check docker image
@@ -43,7 +44,7 @@ jobs:
           git checkout ech-no-auto-rm
           git pull --ff-only
           cd loadtests
-          ./artipie-docker.sh 8081
+#          ./artipie-docker.sh 8081
           docker ps
           tree ./root
           ls -lah root/var/repo/artipie
@@ -81,6 +82,6 @@ jobs:
           env
 #        working-directory: benchmarks/loadtests
       - name: Stop artipie server
-        run: docker ps;echo docker stop artipie; ls -lah; rm -rfv root
+        run: docker ps;echo docker stop artipie; echo rm -rfv root; ls -lah
         working-directory: benchmarks/loadtests
 
