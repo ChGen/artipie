@@ -37,14 +37,13 @@ jobs:
         run: docker image inspect artipie/artipie:1.0-SNAPSHOT|head -n50
       - name: Checkout results repo/branch
         run: git clone https://github.com/artipie/benchmarks.git
-      - name: Branch + Artipie server
+      - name: Branch + was Artipie server
         run: |
           pwd; ls -lah; git branch -a
           git fetch
           git checkout ech-no-auto-rm
           git pull --ff-only
           cd loadtests
-#          ./artipie-docker.sh 8081
           docker ps
           tree ./root
           ls -lah root/var/repo/artipie
