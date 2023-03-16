@@ -17,6 +17,7 @@ jobs:
           docker stop artipie || :
           docker rm -fv artipie || :
           docker image rm -f artipie/artipie:1.0-SNAPSHOT || :
+          docker ps
       - name: Maven build
         run: mvn clean install
       - name: Check docker image
