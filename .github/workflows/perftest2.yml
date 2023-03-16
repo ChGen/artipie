@@ -27,7 +27,7 @@ jobs:
       - name: Prepare docker env
         run: |
           docker info
-          docker stop artipie
+          docker stop artipie || :
           docker image rm -f artipie/artipie:1.0-SNAPSHOT || :
       - name: Maven build
         run: mvn clean install
@@ -51,10 +51,10 @@ jobs:
         run: bash -c '[ ! -f $HOME/apache-jmeter-5.5.tgz ] && wget https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.5.tgz -O $HOME/apache-jmeter-5.5.tgz; tar xf $HOME/apache-jmeter-5.5.tgz && docker ps'
         working-directory: benchmarks/loadtests
       - name: Prepare artifacts repo
-        run: ./prep-maven-dyn.py --total-artifacts 12 && docker ps
+        run: time ./prep-maven-dyn.py --total-artifacts 12 && docker ps
         working-directory: benchmarks/loadtests
       - name: Run upload test
-        run: docker ps;cat "$HOME/.benchvars" && . "$HOME/.benchvars" && ./jmx-files-maven-ul.sh "$TARGET_HOST" "$TARGET_PORT" 30 maven-dyn;docker ps
+        run: docker ps;cat "$HOME/.benchvars" && . "$HOME/.benchvars" && timeout 60 ./jmx-files-maven-ul.sh "$TARGET_HOST" "$TARGET_PORT" 30 maven-dyn;docker ps
         #TODO: with timeout
         working-directory: benchmarks/loadtests
       - name: Check git tag
