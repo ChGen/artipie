@@ -22,4 +22,64 @@ jobs:
         run: test ! -f $HOME/.benchvars && exit 1;exit 0
       - name: Check connection
         run: . "$HOME/.benchvars" && curl -v "http://$TARGET_HOST:$TARGET_PORT/chgen/bintest"
+      - name: Check variables
+        run: test ! -f $HOME/.benchvars && exit 1;exit 0
+      - name: Prepare docker env
+        run: |
+          docker info
+          docker stop artipie
+          docker image rm -f artipie/artipie:1.0-SNAPSHOT || :
+      - name: Maven build
+        run: mvn clean install
+      - name: Check docker image
+        run: docker image inspect artipie/artipie:1.0-SNAPSHOT|head -n50
+      - name: Checkout results repo/branch
+        run: git clone https://github.com/artipie/benchmarks.git
+      - name: Branch + Artipie server
+        run: |
+          pwd; ls -lah; git branch -a
+          git fetch
+          git checkout ech-no-auto-rm
+          git pull --ff-only
+          cd loadtests
+          ./artipie-docker.sh 8081
+          docker ps
+          tree ./root
+          ls -lah root/var/repo/artipie
+        working-directory: benchmarks
+      - name: Prepare JMeter
+        run: bash -c '[ ! -f $HOME/apache-jmeter-5.5.tgz ] && wget https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.5.tgz -O $HOME/apache-jmeter-5.5.tgz; tar xf $HOME/apache-jmeter-5.5.tgz && docker ps'
+        working-directory: benchmarks/loadtests
+      - name: Prepare artifacts repo
+        run: ./prep-maven-dyn.py --total-artifacts 12 && docker ps
+        working-directory: benchmarks/loadtests
+      - name: Run upload test
+        run: docker ps;cat "$HOME/.benchvars" && . "$HOME/.benchvars" && ./jmx-files-maven-ul.sh "$TARGET_HOST" "$TARGET_PORT" 30 maven-dyn;docker ps
+        #TODO: with timeout
+        working-directory: benchmarks/loadtests
+      - name: Check git tag
+        run: pwd;ls -lah;git tag -l; git branch -a;git tag --points-at HEAD
+#        working-directory: benchmarks/loadtests
+      - name: Check env tag
+        run: bash -c 'echo ${GITHUB_REF##refs/tags/}'
+        working-directory: benchmarks/loadtests
+      - name: Try git commit/push for results
+        run: |
+          ls -lah && pwd
+          tag=`git tag --points-at HEAD`
+          . $HOME/.benchvars
+          cd "benchmarks/loadtests"
+          git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
+          cd bench && mkdir -p $tag
+          cp -fv ../last_test_result/statistics.json ./
+          cp -fv ../last_test_result/statistics.json ./$tag
+          ls -lah && pwd
+          git add -f statistics.json && git add -f $tag
+          git commit -m test
+          git push origin master
+          env
+#        working-directory: benchmarks/loadtests
+      - name: Stop artipie server
+        run: docker ps;echo docker stop artipie; ls -lah; rm -rfv root
+        working-directory: benchmarks/loadtests
 
