@@ -68,7 +68,7 @@ jobs:
           git push origin master
           env
 #        working-directory: benchmarks/loadtests
-      - name: Stop artipie server
-        run: docker ps;echo docker stop artipie; ls -lah; rm -rfv root
+      - name: Stop artipie server?
+        run: docker ps;echo docker stop artipie; echo rm -rfv root; ls -lah;
         working-directory: benchmarks/loadtests
 
