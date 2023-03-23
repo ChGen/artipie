@@ -4,7 +4,6 @@ on:
     workflows: [ Do performance testing for artipie ]
     types: [ completed ]
 #    branches: [ech-dev]
-    
 jobs:
   perf-test2:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -13,61 +12,66 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
-      - run: git branch
-      - run: env
-        name: 1st step of stage2
-      - name: 2nd step of stage2
-        run: env; ls -la; pwd; env > /tmp/perftest2.log; ls -lah >> /tmp/perftest2.log; date>>/tmp/perftest2.log; git show --summary HEAD >> /tmp/perftest2.log; git tag --points-at HEAD >>  /tmp/perftest2.log;
-      - name: Check variables
-        run: test ! -f $HOME/.benchvars && exit 1;exit 0
+      - run: env;git branch -a
+#      - run: env
+#        name: 1st step of stage2
+#      - name: 2nd step of stage2
+#        run: env; ls -la; pwd; env > /tmp/perftest2.log; ls -lah >> /tmp/perftest2.log; date>>/tmp/perftest2.log; git show --summary HEAD >> /tmp/perftest2.log; git tag --points-at HEAD >>  /tmp/perftest2.log;
+#      - name: Check variables
+#        run: test ! -f $HOME/.benchvars && exit 1;exit 0
       - name: Check connection
         run: . "$HOME/.benchvars" && curl -v "http://$TARGET_HOST:$TARGET_PORT/chgen/bintest"
       - name: Check variables
         run: test ! -f $HOME/.benchvars && exit 1;exit 0
-      - name: Prepare docker env
-        run: |
-          docker info
-          docker stop artipie || :
-          docker rm -fv artipie || :
-          docker image rm -f artipie/artipie:1.0-SNAPSHOT || :
-          docker ps
-      - name: Maven build
-        run: mvn clean install
-      - name: Check docker image
-        run: docker image inspect artipie/artipie:1.0-SNAPSHOT|head -n50
+#      - name: Prepare docker env
+#        run: |
+#          docker info
+#          docker stop artipie || :
+#          docker rm -fv artipie || :
+#          docker image rm -f artipie/artipie:1.0-SNAPSHOT || :
+#          docker ps
+#      - name: Maven build
+#        run: mvn clean install
+#      - name: Check docker image
+#        run: docker image inspect artipie/artipie:1.0-SNAPSHOT|head -n50
       - name: Checkout results repo/branch
         run: git clone https://github.com/artipie/benchmarks.git
       - name: Branch + was Artipie server
         run: |
           pwd; ls -lah; git branch -a
-          git fetch
+          git fetch --all
           git checkout ech-no-auto-rm
           git pull --ff-only
           cd loadtests
-          docker ps
-          tree ./root
-          ls -lah root/var/repo/artipie
+#          docker ps
+#          tree ./root
+#          ls -lah root/var/repo/artipie
         working-directory: benchmarks
       - name: Prepare JMeter
-        run: bash -c '[ ! -f $HOME/apache-jmeter-5.5.tgz ] && wget https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.5.tgz -O $HOME/apache-jmeter-5.5.tgz; tar xf $HOME/apache-jmeter-5.5.tgz && docker ps'
+        run: bash -c '[ ! -f $HOME/apache-jmeter-5.5.tgz ] && wget https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.5.tgz -O $HOME/apache-jmeter-5.5.tgz; tar xf $HOME/apache-jmeter-5.5.tgz'
         working-directory: benchmarks/loadtests
       - name: Prepare artifacts repo
-        run: time ./prep-maven-dyn.py --total-artifacts 12 && docker ps
+        run: time ./prep-maven-dyn.py --total-artifacts 100 && du -ms ./test-data/maven-dyn
         working-directory: benchmarks/loadtests
       - name: Run upload test
-        run: docker ps;cat "$HOME/.benchvars" && . "$HOME/.benchvars" && timeout 60 ./jmx-files-maven-ul.sh "$TARGET_HOST" "$TARGET_PORT" 30 maven-dyn;docker ps
-        #TODO: with timeout
+        run: cat "$HOME/.benchvars" && . "$HOME/.benchvars" && timeout 220 ./jmx-files-maven-ul.sh "$TARGET_HOST" "$TARGET_PORT" 180 maven-dyn;
         working-directory: benchmarks/loadtests
-      - name: Check git tag
-        run: pwd;ls -lah;git tag -l; git branch -a;git tag --points-at HEAD
+#      - name: Check git tag
+#        run: pwd;ls -lah;git tag -l; git branch -a;git tag --points-at HEAD
 #        working-directory: benchmarks/loadtests
-      - name: Check env tag
-        run: bash -c 'echo ${GITHUB_REF##refs/tags/}'
-        working-directory: benchmarks/loadtests
+#      - name: Check env tag
+#        run: bash -c 'echo ${GITHUB_REF##refs/tags/}'
+#        working-directory: benchmarks/loadtests
       - name: Try git commit/push for results
         run: |
           ls -lah && pwd
           tag=`git tag --points-at HEAD`
+          hash=`git rev-parse HEAD`
+          if [ -z "$tag" ] ; then
+            tag="$hash"
+            echo "Error: tag is empty with commit $hash"
+            exit 1
+          fi
           . $HOME/.benchvars
           cd "benchmarks/loadtests"
           git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
@@ -80,7 +84,7 @@ jobs:
           git push origin master
           env
 #        working-directory: benchmarks/loadtests
-      - name: Stop artipie server?
-        run: docker ps;echo docker stop artipie; echo rm -rfv root; ls -lah
-        working-directory: benchmarks/loadtests
+#      - name: Stop artipie server?
+#        run: docker ps;echo docker stop artipie; echo rm -rfv root; ls -lah
+#        working-directory: benchmarks/loadtests
 
