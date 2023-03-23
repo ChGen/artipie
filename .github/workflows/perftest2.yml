@@ -65,7 +65,7 @@ jobs:
       - name: Try git commit/push for results
         run: |
           ls -lah && pwd
-          tag=`git tag --points-at HEAD`
+          tag=`git tag --points-at HEAD|tail -n1`
           hash=`git rev-parse HEAD`
           if [ -z "$tag" ] ; then
             tag="$hash"
@@ -75,12 +75,12 @@ jobs:
           . $HOME/.benchvars
           cd "benchmarks/loadtests"
           git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
-          cd bench && mkdir -p $tag
+          cd bench && mkdir -p "$tag"
           cp -fv ../last_test_result/statistics.json ./
-          cp -fv ../last_test_result/statistics.json ./$tag
+          cp -fv ../last_test_result/statistics.json "./$tag"
           ls -lah && pwd
-          git add -f statistics.json && git add -f $tag
-          git commit -m test
+          git add -f statistics.json && git add -fr "./$tag"
+          git commit -m "Test results for tag: $tag; commit: $hash"		
           git push origin master
           env
 #        working-directory: benchmarks/loadtests
