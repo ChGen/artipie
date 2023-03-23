@@ -31,7 +31,7 @@ jobs:
           git checkout ech-no-auto-rm
           git pull --ff-only
           cd loadtests
-          ./artipie-docker.sh 8081
+          ./artipie-snapshot.sh 8081
           docker ps
           tree ./root
           ls -lah root/var/repo/artipie
