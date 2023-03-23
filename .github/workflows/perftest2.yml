@@ -79,7 +79,7 @@ jobs:
           cp -fv ../last_test_result/statistics.json ./
           cp -fv ../last_test_result/statistics.json "./$tag"
           ls -lah && pwd
-          git add -f statistics.json && git add -fr "./$tag"
+          git add -f statistics.json && git add -f "./$tag"
           git commit -m "Test results for tag: $tag; commit: $hash"		
           git push origin master
           env
