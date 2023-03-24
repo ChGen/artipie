@@ -88,7 +88,11 @@ jobs:
           git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
           git config --global user.name "Perftest Action"
           cd bench && mkdir -p "$tag"
-          cp -rfv "$perfRes"/* "./$tag"
+          for t in "$perfRes"/* ; do
+            dst="./$tag/$(basename $t)"
+            mkdir -p "$dst"
+            cp -fv "$t/statistics.json" "$dst"
+          done
           ls -lah && pwd
           git add -f statistics.json && git add -f "./$tag"
           git commit -m "Test results for tag: $tag; commit: $hash"		
