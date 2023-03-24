@@ -85,8 +85,8 @@ jobs:
           fi
           . $HOME/.benchvars
           cd "benchmarks/loadtests"
-          git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
           git config --global user.name "Perftest Action"
+          git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
           cd bench && mkdir -p "$tag"
           for t in "$perfRes"/* ; do
             dst="./$tag/$(basename $t)"
@@ -98,7 +98,7 @@ jobs:
           git commit -m "Test results for tag: $tag; commit: $hash"		
           git push origin master
           env
-          rm -rfv "$perfRes"
+          rm -rf "$perfRes"
 #        working-directory: benchmarks/loadtests
 #      - name: Stop artipie server?
 #        run: docker ps;echo docker stop artipie; echo rm -rfv root; ls -lah
