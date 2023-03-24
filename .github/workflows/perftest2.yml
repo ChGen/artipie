@@ -54,7 +54,10 @@ jobs:
         run: time ./prep-maven-dyn.py --total-artifacts 100 && du -ms ./test-data/maven-dyn
         working-directory: benchmarks/loadtests
       - name: Run upload test
-        run: cat "$HOME/.benchvars" && . "$HOME/.benchvars" && timeout 220 ./jmx-files-maven-ul.sh "$TARGET_HOST" "$TARGET_PORT" 180 maven-dyn;
+        run: |
+          cat "$HOME/.benchvars"
+          . "$HOME/.benchvars"
+          timeout 220 ./jmx-files-maven-ul.sh "$TARGET_HOST" "$TARGET_PORT" 180 maven-dyn
         working-directory: benchmarks/loadtests
 #      - name: Check git tag
 #        run: pwd;ls -lah;git tag -l; git branch -a;git tag --points-at HEAD
@@ -75,6 +78,7 @@ jobs:
           . $HOME/.benchvars
           cd "benchmarks/loadtests"
           git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
+          git config --global user.name "Perftest Action"
           cd bench && mkdir -p "$tag"
           cp -fv ../last_test_result/statistics.json ./
           cp -fv ../last_test_result/statistics.json "./$tag"
