@@ -57,7 +57,14 @@ jobs:
         run: |
           cat "$HOME/.benchvars"
           . "$HOME/.benchvars"
-          timeout 220 ./jmx-files-maven-ul.sh "$TARGET_HOST" "$TARGET_PORT" 180 maven-dyn
+          perfRes="./_perf_results"
+          rm -rf "$perfRes"
+          mkdir -p "$perfRes"
+          testName="jmx-files-maven-ul"
+          timeout 220 "./$testName.sh" "$TARGET_HOST" "$TARGET_PORT" 180 maven-dyn
+          testRes=`readlink -f last_test_result`
+          mv -fv "$testRes" "$perfRes/$testName"
+          rm -fv last_test_result
         working-directory: benchmarks/loadtests
 #      - name: Check git tag
 #        run: pwd;ls -lah;git tag -l; git branch -a;git tag --points-at HEAD
@@ -68,6 +75,7 @@ jobs:
       - name: Try git commit/push for results
         run: |
           ls -lah && pwd
+          perfRes="../_perf_results"
           tag=`git tag --points-at HEAD|tail -n1`
           hash=`git rev-parse HEAD`
           if [ -z "$tag" ] ; then
@@ -80,13 +88,13 @@ jobs:
           git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
           git config --global user.name "Perftest Action"
           cd bench && mkdir -p "$tag"
-          cp -fv ../last_test_result/statistics.json ./
-          cp -fv ../last_test_result/statistics.json "./$tag"
+          cp -fv "$perfRes"/* "./$tag"
           ls -lah && pwd
           git add -f statistics.json && git add -f "./$tag"
           git commit -m "Test results for tag: $tag; commit: $hash"		
           git push origin master
           env
+          rm -rfv "$perfRes"
 #        working-directory: benchmarks/loadtests
 #      - name: Stop artipie server?
 #        run: docker ps;echo docker stop artipie; echo rm -rfv root; ls -lah
