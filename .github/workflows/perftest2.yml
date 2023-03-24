@@ -34,9 +34,9 @@ jobs:
 #        run: mvn clean install
 #      - name: Check docker image
 #        run: docker image inspect artipie/artipie:1.0-SNAPSHOT|head -n50
-      - name: Checkout results repo/branch
+      - name: Checkout benchmarks repo
         run: git clone https://github.com/artipie/benchmarks.git
-      - name: Branch + was Artipie server
+      - name: Checkout benchmarks branch
         run: |
           pwd; ls -lah; git branch -a
           git fetch --all
@@ -88,7 +88,7 @@ jobs:
           git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
           git config --global user.name "Perftest Action"
           cd bench && mkdir -p "$tag"
-          cp -fv "$perfRes"/* "./$tag"
+          cp -rfv "$perfRes"/* "./$tag"
           ls -lah && pwd
           git add -f statistics.json && git add -f "./$tag"
           git commit -m "Test results for tag: $tag; commit: $hash"		
