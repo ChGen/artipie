@@ -86,6 +86,7 @@ jobs:
           . $HOME/.benchvars
           cd "benchmarks/loadtests"
           git config --global user.name "Perftest Action"
+          git config --global user.email "perftest@test.com"
           git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
           cd bench && mkdir -p "$tag"
           for t in "$perfRes"/* ; do
