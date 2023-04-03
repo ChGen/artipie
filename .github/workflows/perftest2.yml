@@ -40,7 +40,7 @@ jobs:
         run: |
           pwd; ls -lah; git branch -a
           git fetch --all
-          git checkout ech-no-auto-rm
+          git checkout master
           git pull --ff-only
           cd loadtests
 #          docker ps
