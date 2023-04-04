@@ -43,9 +43,6 @@ jobs:
           git checkout master
           git pull --ff-only
           cd loadtests
-#          docker ps
-#          tree ./root
-#          ls -lah root/var/repo/artipie
         working-directory: benchmarks
       - name: Prepare JMeter
         run: bash -c '[ ! -f $HOME/apache-jmeter-5.5.tgz ] && wget https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.5.tgz -O $HOME/apache-jmeter-5.5.tgz; tar xf $HOME/apache-jmeter-5.5.tgz'
@@ -104,4 +101,3 @@ jobs:
 #      - name: Stop artipie server?
 #        run: docker ps;echo docker stop artipie; echo rm -rfv root; ls -lah
 #        working-directory: benchmarks/loadtests
-
