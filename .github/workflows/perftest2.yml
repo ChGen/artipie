@@ -89,14 +89,15 @@ jobs:
           git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
           cd bench
           git checkout master
-          mkdir -p "$tag"
+          dstDir="perftests/$tag"
+          mkdir -p "$dstDir"
           for t in "$perfRes"/* ; do
-            dst="./$tag/$(basename $t)"
+            dst="./$dstDir/$(basename $t)"
             mkdir -p "$dst"
             cp -fv "$t/statistics.json" "$dst"
           done
           ls -lah && pwd
-          git add -f "./$tag"
+          git add -f "./$dstDir"
           git commit -m "Test results for tag: $tag; commit: $hash"		
           git push --verbose origin master
           env
