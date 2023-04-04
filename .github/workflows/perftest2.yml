@@ -96,7 +96,7 @@ jobs:
             cp -fv "$t/statistics.json" "$dst"
           done
           ls -lah && pwd
-          git add -f statistics.json && git add -f "./$tag"
+          git add -f "./$tag"
           git commit -m "Test results for tag: $tag; commit: $hash"		
           git push --verbose origin master
           env
