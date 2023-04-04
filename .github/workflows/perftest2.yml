@@ -60,7 +60,7 @@ jobs:
           rm -rf "$perfRes"
           mkdir -p "$perfRes"
           testName="jmx-files-maven-ul"
-          timeout 220 "./$testName.sh" "$TARGET_HOST" "$TARGET_PORT" 180 maven-dyn
+          timeout 220 "./$testName.sh" "$TARGET_HOST" "$TARGET_PORT" 30 maven-dyn
           testRes=`readlink -f last_test_result`
           mv -fv "$testRes" "$perfRes/$testName"
           rm -fv last_test_result
