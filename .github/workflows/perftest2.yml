@@ -45,7 +45,9 @@ jobs:
           cd loadtests
         working-directory: benchmarks
       - name: Prepare JMeter
-        run: bash -c '[ ! -f $HOME/apache-jmeter-5.5.tgz ] && wget https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.5.tgz -O $HOME/apache-jmeter-5.5.tgz; tar xf $HOME/apache-jmeter-5.5.tgz'
+        run: |
+          [ ! -s $HOME/apache-jmeter-5.5.tgz ] && wget https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.5.tgz -O $HOME/apache-jmeter-5.5.tgz
+          tar xf $HOME/apache-jmeter-5.5.tgz
         working-directory: benchmarks/loadtests
       - name: Prepare artifacts repo
         run: time ./prep-maven-dyn.py --total-artifacts 100 && du -ms ./test-data/maven-dyn
