@@ -87,7 +87,9 @@ jobs:
           git config --global user.name "Perftest Action"
           git config --global user.email "perftest@test.com"
           git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
-          cd bench && mkdir -p "$tag"
+          cd bench
+          git checkout master
+          mkdir -p "$tag"
           for t in "$perfRes"/* ; do
             dst="./$tag/$(basename $t)"
             mkdir -p "$dst"
@@ -96,7 +98,7 @@ jobs:
           ls -lah && pwd
           git add -f statistics.json && git add -f "./$tag"
           git commit -m "Test results for tag: $tag; commit: $hash"		
-          git push origin master
+          git push --verbose origin master
           env
           rm -rf "$perfRes"
 #        working-directory: benchmarks/loadtests
