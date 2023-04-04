@@ -35,7 +35,7 @@ jobs:
 #      - name: Check docker image
 #        run: docker image inspect artipie/artipie:1.0-SNAPSHOT|head -n50
       - name: Checkout benchmarks repo
-        run: git clone https://github.com/artipie/benchmarks.git
+        run: git clone --depth=1 https://github.com/artipie/benchmarks.git
       - name: Checkout benchmarks branch
         run: |
           pwd; ls -lah; git branch -a
@@ -86,7 +86,7 @@ jobs:
           cd "benchmarks/loadtests"
           git config --global user.name "Perftest Action"
           git config --global user.email "perftest@test.com"
-          git clone https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
+          git clone --depth=1 https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
           cd bench
           git checkout master
           dstDir="perftests/$tag"
