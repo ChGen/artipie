@@ -72,7 +72,7 @@ jobs:
 #        run: bash -c 'echo ${GITHUB_REF##refs/tags/}'
 #        working-directory: benchmarks/loadtests
       - name: Extract JFR log
-      - run: |
+        run: |
           . "$HOME/.benchvars"
           DOCKER_HOST="$SERVER_HOST:$DOCKER_PORT" docker exec -it artipie jcmd 1 JFR.dump filename=/var/artipie/.storage/data/chgen/bintest/artipie.jfr
           rm -fv artipie.jfr artipie.jfr.tar.xz
