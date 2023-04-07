@@ -1,4 +1,5 @@
-name: Do performance testing for artipie
+name: Prepare Artipie for perftest
+concurrency: perftest_env
 on:
   push:
     tags:

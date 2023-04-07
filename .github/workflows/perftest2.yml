@@ -1,7 +1,8 @@
-name: Artipie perftest part n.2
+name: Run Artipie perftest
+concurrency: perftest_env
 on:
   workflow_run:
-    workflows: [ Do performance testing for artipie ]
+    workflows: [Prepare Artipie for perftest]
     types: [ completed ]
 #    branches: [ech-dev]
 jobs:
