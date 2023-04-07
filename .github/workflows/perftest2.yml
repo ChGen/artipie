@@ -20,7 +20,7 @@ jobs:
 #      - name: Check variables
 #        run: test ! -f $HOME/.benchvars && exit 1;exit 0
       - name: Check connection
-        run: . "$HOME/.benchvars" && curl -v "http://$TARGET_HOST:$TARGET_PORT/chgen/bintest"
+        run: . "$HOME/.benchvars" && curl -v "http://$SERVER_HOST:$REPO_PORT/chgen/bintest"
       - name: Check variables
         run: test ! -f $HOME/.benchvars && exit 1;exit 0
 #      - name: Prepare docker env
@@ -60,7 +60,7 @@ jobs:
           rm -rf "$perfRes"
           mkdir -p "$perfRes"
           testName="jmx-files-maven-ul"
-          timeout 220 "./$testName.sh" "$TARGET_HOST" "$TARGET_PORT" 30 maven-dyn
+          timeout 220 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 30 maven-dyn
           testRes=`readlink -f last_test_result`
           mv -fv "$testRes" "$perfRes/$testName"
           rm -fv last_test_result
@@ -71,10 +71,17 @@ jobs:
 #      - name: Check env tag
 #        run: bash -c 'echo ${GITHUB_REF##refs/tags/}'
 #        working-directory: benchmarks/loadtests
+      - name: Extract JFR log
+      - run: |
+          . "$HOME/.benchvars"
+          DOCKER_HOST="$SERVER_HOST:$DOCKER_PORT" docker exec -it artipie jcmd 1 JFR.dump filename=/var/artipie/.storage/data/chgen/bintest/artipie.jfr
+          rm -fv artipie.jfr artipie.jfr.tar.xz
+          wget "http://SERVER_HOST:$REPO_PORT/chgen/bintest/artipie.jfr"
+          tar cJf artipie.jfr.tar.xz artipie.jfr
+        working-directory: benchmarks/loadtests
       - name: Try git commit/push for results
         run: |
           ls -lah && pwd
-          perfRes="../_perf_results"
           tag=`git tag --points-at HEAD|tail -n1`
           hash=`git rev-parse HEAD`
           if [ -z "$tag" ] ; then
@@ -91,13 +98,16 @@ jobs:
           git checkout master
           dstDir="perftests/$tag"
           mkdir -p "$dstDir"
+          perfRes="../_perf_results"
           for t in "$perfRes"/* ; do
             dst="./$dstDir/$(basename $t)"
             mkdir -p "$dst"
             cp -fv "$t/statistics.json" "$dst"
           done
+          mv -fv "../artipie.jfr.tar.xz" "perftests/artipie.last.jfr.tar.xz"
           ls -lah && pwd
           git add -f "./$dstDir"
+          git add -f "perftests/artipie.last.jfr.tar.xz"
           git commit -m "Test results for tag: $tag; commit: $hash"		
           git push --verbose origin master
           env
