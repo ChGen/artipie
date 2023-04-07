@@ -60,7 +60,7 @@ jobs:
           rm -rf "$perfRes"
           mkdir -p "$perfRes"
           testName="jmx-files-maven-ul"
-          timeout 220 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 30 maven-dyn
+          timeout 220 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 150 maven-dyn
           testRes=`readlink -f last_test_result`
           mv -fv "$testRes" "$perfRes/$testName"
           rm -fv last_test_result
@@ -75,7 +75,7 @@ jobs:
         run: |
           . "$HOME/.benchvars"
           DOCKER_HOST="$SERVER_HOST:$DOCKER_PORT" docker exec artipie jcmd 1 JFR.dump filename=/var/artipie/.storage/data/chgen/bintest/artipie.jfr
-          sleep 5
+          sleep 15 # Or just docker restart artipie ?
           rm -fv artipie.jfr artipie.jfr.tar.xz
           wget --verbose "http://$SERVER_HOST:$REPO_PORT/chgen/bintest/artipie.jfr"
           tar cJf artipie.jfr.tar.xz artipie.jfr
