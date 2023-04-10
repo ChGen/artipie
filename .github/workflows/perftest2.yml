@@ -60,11 +60,13 @@ jobs:
           perfRes="./_perf_results"
           rm -rf "$perfRes"
           mkdir -p "$perfRes"
-          testName="jmx-files-maven-ul"
-          timeout 220 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 150 maven-dyn
-          testRes=`readlink -f last_test_result`
-          mv -fv "$testRes" "$perfRes/$testName"
-          rm -fv last_test_result
+          tests="jmx-files-maven-ul jmx-files-maven-dl"
+          for testName in $tests ; do 
+            timeout 22 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 10 maven-dyn
+            testRes=`readlink -f last_test_result`
+            mv -fv "$testRes" "$perfRes/$testName"
+            rm -fv last_test_result
+          done
         working-directory: benchmarks/loadtests
 #      - name: Check git tag
 #        run: pwd;ls -lah;git tag -l; git branch -a;git tag --points-at HEAD
@@ -76,9 +78,9 @@ jobs:
         run: |
           . "$HOME/.benchvars"
           DOCKER_HOST="$SERVER_HOST:$DOCKER_PORT" docker exec artipie jcmd 1 JFR.dump filename=/var/artipie/.storage/data/chgen/bintest/artipie.jfr
-          sleep 15 # Or just docker restart artipie ?
+          sleep 10 # Or just restart artipie ?
           rm -fv artipie.jfr artipie.jfr.tar.xz
-          wget --verbose "http://$SERVER_HOST:$REPO_PORT/chgen/bintest/artipie.jfr"
+          wget "http://$SERVER_HOST:$REPO_PORT/chgen/bintest/artipie.jfr"
           tar cJf artipie.jfr.tar.xz artipie.jfr
         working-directory: benchmarks/loadtests
       - name: Try git commit/push for results
