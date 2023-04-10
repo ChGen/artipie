@@ -66,7 +66,6 @@ jobs:
             timeout 40 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 10 maven-dyn
             testRes=`readlink -f last_test_result`
             mv -fv "$testRes" "$perfRes/$testName"
-            ls -lah "$testRes"
             ls -lah "$perfRes/$testName"
             rm -fv last_test_result
           done
