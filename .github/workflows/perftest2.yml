@@ -61,8 +61,9 @@ jobs:
           rm -rf "$perfRes"
           mkdir -p "$perfRes"
           tests="jmx-files-maven-ul jmx-files-maven-dl"
-          for testName in $tests ; do 
-            timeout 22 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 10 maven-dyn
+          for testName in $tests ; do
+            echo "Running test $testName for $SERVER_HOST with $REPO_PORT port ..."
+            timeout 40 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 10 maven-dyn
             testRes=`readlink -f last_test_result`
             mv -fv "$testRes" "$perfRes/$testName"
             rm -fv last_test_result
