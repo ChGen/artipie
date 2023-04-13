@@ -111,7 +111,9 @@ jobs:
             ls -lah "$t"
             cp -fv "$t/statistics.json" "$dst"
           done
-          mv -fv "../artipie.jfr.tar.xz" "perftests/artipie.last.jfr.tar.xz"
+          url="https://central.artipie.com/artipie/benchmarks/artipie.last.jfr.tar.xz"
+          curl -vT "../artipie.jfr.tar.xz" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
+          echo "$url" > perftests/artipie.last.jfr.tar.xz.txt
           ls -lah && pwd
           git add -f "./$dstDir"
           git add -f "perftests/artipie.last.jfr.tar.xz"
