@@ -77,6 +77,7 @@ jobs:
 #        working-directory: benchmarks/loadtests
       - name: Extract JFR log
         run: |
+          . "$HOME/.benchvars"
           DOCKER_HOST="$SERVER_HOST:$DOCKER_PORT" docker exec artipie jcmd 1 JFR.dump filename=/var/artipie/.storage/data/chgen/bintest/artipie.jfr
           sleep 10 # Or just restart artipie ?
           rm -fv artipie.jfr artipie.jfr.tar.xz
@@ -93,6 +94,7 @@ jobs:
             echo "Error: tag is empty with commit $hash"
             exit 1
           fi
+          . $HOME/.benchvars
           cd "benchmarks/loadtests"
           git config --global user.name "Perftest Action"
           git config --global user.email "perftest@test.com"
