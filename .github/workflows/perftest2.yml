@@ -55,7 +55,6 @@ jobs:
         working-directory: benchmarks/loadtests
       - name: Run upload test
         run: |
-          cat "$HOME/.benchvars"
           . "$HOME/.benchvars"
           perfRes="./_perf_results"
           rm -rf "$perfRes"
@@ -78,7 +77,6 @@ jobs:
 #        working-directory: benchmarks/loadtests
       - name: Extract JFR log
         run: |
-          . "$HOME/.benchvars"
           DOCKER_HOST="$SERVER_HOST:$DOCKER_PORT" docker exec artipie jcmd 1 JFR.dump filename=/var/artipie/.storage/data/chgen/bintest/artipie.jfr
           sleep 10 # Or just restart artipie ?
           rm -fv artipie.jfr artipie.jfr.tar.xz
@@ -95,7 +93,6 @@ jobs:
             echo "Error: tag is empty with commit $hash"
             exit 1
           fi
-          . $HOME/.benchvars
           cd "benchmarks/loadtests"
           git config --global user.name "Perftest Action"
           git config --global user.email "perftest@test.com"
@@ -113,10 +110,10 @@ jobs:
           done
           url="https://central.artipie.com/artipie/benchmarks/artipie.last.jfr.tar.xz"
           curl -vT "../artipie.jfr.tar.xz" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
-          echo "$url" > perftests/artipie.last.jfr.tar.xz.txt
+          echo "$url" > "perftests/artipie.last.jfr.tar.xz.txt"
           ls -lah && pwd
           git add -f "./$dstDir"
-          git add -f "perftests/artipie.last.jfr.tar.xz"
+          git add -f "perftests/artipie.last.jfr.tar.xz.txt"
           git commit -m "Test results for tag: $tag; commit: $hash"		
           git push --verbose origin master
           env
