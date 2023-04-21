@@ -112,10 +112,10 @@ jobs:
           done
           url="https://central.artipie.com/artipie/benchmarks/artipie.last.jfr.tar.xz"
           curl -vT "../artipie.jfr.tar.xz" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
-          echo "$url" > "perftests/artipie.last.jfr.tar.xz.txt"
+          echo "$url" > "perftests/artipie_last_jfr.txt"
           ls -lah && pwd
           git add -f "./$dstDir"
-          git add -f "perftests/artipie.last.jfr.tar.xz.txt"
+          git add -f "perftests/artipie_last_jfr.txt"
           git commit -m "Test results for tag: $tag; commit: $hash"		
           git push --verbose origin master
           env
