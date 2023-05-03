@@ -124,6 +124,7 @@ jobs:
           for f in ./graphs/* ; do
             echo "$f"
             url="https://central.artipie.com/artipie/benchmarks/perftests_repo/graphs/$(basename $f)"
+            echo curl -vT "$f" -u"UPLOAD_LOGIN:UPLOAD_PASSWORD" "$url"
             curl -vT "$f" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
           done
 
