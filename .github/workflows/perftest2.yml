@@ -84,7 +84,7 @@ jobs:
           wget "http://$SERVER_HOST:$REPO_PORT/chgen/bintest/artipie.jfr"
           tar cJf artipie.jfr.tar.xz artipie.jfr
         working-directory: benchmarks/loadtests
-      - name: Try git commit/push for results
+      - name: Uploading results
         run: |
           ls -lah && pwd
           tag=`git tag --points-at HEAD|tail -n1`
@@ -96,12 +96,10 @@ jobs:
           fi
           . $HOME/.benchvars
           cd "benchmarks/loadtests"
-          git config --global user.name "Perftest Action"
-          git config --global user.email "perftest@test.com"
-          git clone --depth=1 https://chgen:$PUSH_TOKEN@github.com/ChGen/benchmarks.git bench
-          cd bench
-          git checkout master
-          dstDir="perftests/$tag"
+
+          perftestsRepo='./perftests_repo'
+          rm -rfv "$perftestsRepo"
+          dstDir="$perftestsRepo/perftests/$tag"
           mkdir -p "$dstDir"
           perfRes="../_perf_results"
           for t in "$perfRes"/* ; do
@@ -110,6 +108,15 @@ jobs:
             ls -lah "$t"
             cp -fv "$t/statistics.json" "$dst"
           done
+          tree "$perftestsRepo"
+          ls -lah "$dstDir"
+
+
+          time ./sync_perftests.sh https://central.artipie.com/artipie/benchmarks "${UPLOAD_LOGIN}" "${UPLOAD_PASSWORD}"
+
+          git config --global user.name "Perftest Action"
+          git config --global user.email "perftest@test.com"
+
           url="https://central.artipie.com/artipie/benchmarks/perftests_repo/jfr/artipie.last.jfr.tar.xz"
           curl -vT "../artipie.jfr.tar.xz" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
           echo "$url" > "perftests/artipie_last_jfr.txt"
