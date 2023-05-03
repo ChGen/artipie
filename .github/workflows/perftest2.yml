@@ -111,14 +111,13 @@ jobs:
           tree "$perftestsRepo"
           ls -lah "$dstDir"
 
-
           time ./sync_perftests.sh https://central.artipie.com/artipie/benchmarks "${UPLOAD_LOGIN}" "${UPLOAD_PASSWORD}"
 
           git config --global user.name "Perftest Action"
           git config --global user.email "perftest@test.com"
 
           url="https://central.artipie.com/artipie/benchmarks/perftests_repo/jfr/artipie.last.jfr.tar.xz"
-          curl -vT "../artipie.jfr.tar.xz" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
+          curl -vT "./artipie.jfr.tar.xz" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
           echo "$url" > "perftests/artipie_last_jfr.txt"
           ls -lah && pwd
           git add -f "./$dstDir"
