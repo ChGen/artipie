@@ -101,7 +101,7 @@ jobs:
           rm -rfv "$perftestsRepo"
           dstDir="$perftestsRepo/perftests/$tag"
           mkdir -p "$dstDir"
-          perfRes="../_perf_results"
+          perfRes="./_perf_results"
           for t in "$perfRes"/* ; do
             dst="./$dstDir/$(basename $t)"
             mkdir -p "$dst"
