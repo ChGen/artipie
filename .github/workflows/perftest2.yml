@@ -118,14 +118,9 @@ jobs:
 
           url="https://central.artipie.com/artipie/benchmarks/perftests_repo/jfr/artipie.last.jfr.tar.xz"
           curl -vT "./artipie.jfr.tar.xz" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
-          echo "$url" > "perftests/artipie_last_jfr.txt"
-          ls -lah && pwd
-          git add -f "./$dstDir"
-          git add -f "perftests/artipie_last_jfr.txt"
-          git commit -m "Test results for tag: $tag; commit: $hash"		
-          git push --verbose origin master
           env
           rm -rf "$perfRes"
+          echo "Uploaded all test results for tag: $tag; commit: $hash"
 #        working-directory: benchmarks/loadtests
 #      - name: Stop artipie server?
 #        run: docker ps;echo docker stop artipie; echo rm -rfv root; ls -lah
