@@ -110,7 +110,7 @@ jobs:
             ls -lah "$t"
             cp -fv "$t/statistics.json" "$dst"
           done
-          url="https://central.artipie.com/artipie/benchmarks/artipie.last.jfr.tar.xz"
+          url="https://central.artipie.com/artipie/benchmarks/perftests_repo/jfr/artipie.last.jfr.tar.xz"
           curl -vT "../artipie.jfr.tar.xz" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
           echo "$url" > "perftests/artipie_last_jfr.txt"
           ls -lah && pwd
