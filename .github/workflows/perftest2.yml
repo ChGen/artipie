@@ -120,6 +120,7 @@ jobs:
           curl -vT "./artipie.jfr.tar.xz" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
 
           pip3 install packaging==21.3 matplotlib==3.6.3 mdutils==1.6.0
+          rm -rfv ./graphs
           time ./perfplot.py perftests_repo/perftests ./graphs
           for f in ./graphs/* ; do
             echo "$f"
