@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "t*"
+      - "v*"
 
 jobs:
   perf-test1:
