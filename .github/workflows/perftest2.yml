@@ -62,7 +62,7 @@ jobs:
           tests="jmx-files-maven-ul jmx-files-maven-dl jmx-files-ul jmx-files-dl jmx-maven-ul jmx-maven-dl"
           for testName in $tests ; do
             echo "Running test $testName for $SERVER_HOST with $REPO_PORT port ..."
-            timeout 400 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 300 maven-dyn
+            timeout 22 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 5 maven-dyn
             testRes=`readlink -f last_test_result`
             mv -fv "$testRes" "$perfRes/$testName"
             ls -lah "$perfRes/$testName"
@@ -119,7 +119,13 @@ jobs:
           url="https://central.artipie.com/artipie/benchmarks/perftests_repo/jfr/artipie.last.jfr.tar.xz"
           curl -vT "./artipie.jfr.tar.xz" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
 
+          env
+          rm -rf "$perfRes"
+          echo "Uploaded all test results for tag: $tag; commit: $hash"
+      - name: Generating graphs
+        run: |
           pip3 install packaging==21.3 matplotlib==3.6.3 mdutils==1.6.0
+
           rm -rfv ./graphs
           time ./perfplot.py perftests_repo/perftests ./graphs
           for f in ./graphs/* ; do
@@ -129,9 +135,43 @@ jobs:
             curl -vT "$f" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
           done
 
-          env
-          rm -rf "$perfRes"
-          echo "Uploaded all test results for tag: $tag; commit: $hash"
+          tmpDir = "perftests_repo/tmp"
+
+          # For v* tags:
+          rm -rfv "$tmpDir"
+          mkdir -p "$tmpDir"
+          if [ -n "`find perftests_repo/perftests -maxdepth 1 -name 'v*'`" ] ; then
+            mv -fv "$tmpDir"/v* "$tmpDir"
+            rm -rfv ./graphs_v
+            time ./perfplot.py "$tmpDir" ./graphs_v
+            for f in ./graphs_v/* ; do
+              echo "$f"
+              url="https://central.artipie.com/artipie/benchmarks/perftests_repo/graphs_v/$(basename $f)"
+              echo curl -vT "$f" -u"UPLOAD_LOGIN:UPLOAD_PASSWORD" "$url"
+              curl -vT "$f" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
+            done
+          else
+            echo "No v* tag results in perftests_repo/perftests"
+          fi
+
+          # For t* tags:
+          rm -rfv "$tmpDir"
+          mkdir -p "$tmpDir"
+          if [ -n "`find perftests_repo/perftests -maxdepth 1 -name 't*'`" ] ; then
+            mv -fv "$tmpDir"/t* "$tmpDir"
+            rm -rfv ./graphs_t
+            time ./perfplot.py "$tmpDir" ./graphs_t
+            for f in ./graphs_t/* ; do
+              echo "$f"
+              url="https://central.artipie.com/artipie/benchmarks/perftests_repo/graphs_t/$(basename $f)"
+              echo curl -vT "$f" -u"UPLOAD_LOGIN:UPLOAD_PASSWORD" "$url"
+              curl -vT "$f" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
+            done
+          else
+            echo "No t* tag results in perftests_repo/perftests"
+          fi
+
+          rm -rfv "$tmpDir"
 #        working-directory: benchmarks/loadtests
 #      - name: Stop artipie server?
 #        run: docker ps;echo docker stop artipie; echo rm -rfv root; ls -lah
