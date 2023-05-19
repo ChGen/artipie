@@ -123,6 +123,7 @@ jobs:
           rm -rf "$perfRes"
           echo "Uploaded all test results for tag: $tag; commit: $hash"
       - name: Generating graphs
+        working-directory: benchmarks/loadtests
         run: |
           pip3 install packaging==21.3 matplotlib==3.6.3 mdutils==1.6.0
 
