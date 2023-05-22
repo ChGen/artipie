@@ -136,7 +136,7 @@ jobs:
             curl -vT "$f" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
           done
 
-          tmpDir = "perftests_repo/tmp"
+          tmpDir="perftests_repo/tmp"
 
           # For v* tags:
           rm -rfv "$tmpDir"
