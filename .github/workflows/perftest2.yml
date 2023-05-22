@@ -143,7 +143,7 @@ jobs:
           rm -rfv "$tmpDir"
           mkdir -p "$tmpDir"
           if [ -n "`find perftests_repo/perftests -maxdepth 1 -name 'v*'`" ] ; then
-            mv -fv "$tmpDir"/v* "$tmpDir"
+            mv -fv "perftests_repo/perftests"/v* "$tmpDir"
             rm -rfv ./graphs_v
             time ./perfplot.py "$tmpDir" ./graphs_v
             for f in ./graphs_v/* ; do
@@ -160,7 +160,7 @@ jobs:
           rm -rfv "$tmpDir"
           mkdir -p "$tmpDir"
           if [ -n "`find perftests_repo/perftests -maxdepth 1 -name 't*'`" ] ; then
-            mv -fv "$tmpDir"/t* "$tmpDir"
+            mv -fv "perftests_repo/perftests"/t* "$tmpDir"
             rm -rfv ./graphs_t
             time ./perfplot.py "$tmpDir" ./graphs_t
             for f in ./graphs_t/* ; do
