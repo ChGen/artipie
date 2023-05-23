@@ -62,7 +62,7 @@ jobs:
           tests="jmx-files-maven-ul jmx-files-maven-dl jmx-files-ul jmx-files-dl jmx-maven-ul jmx-maven-dl"
           for testName in $tests ; do
             echo "Running test $testName for $SERVER_HOST with $REPO_PORT port ..."
-            timeout 700 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 600 maven-dyn
+            timeout 300 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 180 maven-dyn
             testRes=`readlink -f last_test_result`
             mv -fv "$testRes" "$perfRes/$testName"
             ls -lah "$perfRes/$testName"
