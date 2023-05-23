@@ -79,9 +79,9 @@ jobs:
         run: |
           . "$HOME/.benchvars"
           DOCKER_HOST="$SERVER_HOST:$DOCKER_PORT" docker exec artipie jcmd 1 JFR.dump filename=/var/artipie/.storage/data/chgen/bintest/artipie.jfr
-          sleep 30
+          sleep 99
           rm -fv artipie.jfr artipie.jfr.tar.xz
-          timeout 30 wget "http://$SERVER_HOST:$REPO_PORT/chgen/bintest/artipie.jfr"
+          timeout 99 wget "http://$SERVER_HOST:$REPO_PORT/chgen/bintest/artipie.jfr"
           tar cJf artipie.jfr.tar.xz artipie.jfr
         working-directory: benchmarks/loadtests
       - name: Uploading results
