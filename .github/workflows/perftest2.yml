@@ -62,7 +62,7 @@ jobs:
           tests="jmx-files-maven-ul jmx-files-maven-dl jmx-files-ul jmx-files-dl jmx-maven-ul jmx-maven-dl"
           for testName in $tests ; do
             echo "Running test $testName for $SERVER_HOST with $REPO_PORT port ..."
-            timeout 1300 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 1200 maven-dyn
+            timeout 400 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 300 maven-dyn
             testRes=`readlink -f last_test_result`
             mv -fv "$testRes" "$perfRes/$testName"
             ls -lah "$perfRes/$testName"
@@ -79,9 +79,9 @@ jobs:
         run: |
           . "$HOME/.benchvars"
           DOCKER_HOST="$SERVER_HOST:$DOCKER_PORT" docker exec artipie jcmd 1 JFR.dump filename=/var/artipie/.storage/data/chgen/bintest/artipie.jfr
-          sleep 99
+          sleep 30
           rm -fv artipie.jfr artipie.jfr.tar.xz
-          timeout 99 wget "http://$SERVER_HOST:$REPO_PORT/chgen/bintest/artipie.jfr"
+          timeout 30 wget "http://$SERVER_HOST:$REPO_PORT/chgen/bintest/artipie.jfr"
           tar cJf artipie.jfr.tar.xz artipie.jfr
         working-directory: benchmarks/loadtests
       - name: Uploading results
