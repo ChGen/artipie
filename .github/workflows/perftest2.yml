@@ -21,7 +21,7 @@ jobs:
 #      - name: Check variables
 #        run: test ! -f $HOME/.benchvars && exit 1;exit 0
       - name: Check connection
-        run: . "$HOME/.benchvars" && curl -v "http://$SERVER_HOST:$REPO_PORT/chgen/bintest"
+        run: . "$HOME/.benchvars" && curl -v "http://$SERVER_HOST:$REPO_PORT/bintest"
       - name: Check variables
         run: test ! -f $HOME/.benchvars && exit 1;exit 0
 #      - name: Prepare docker env
@@ -78,10 +78,10 @@ jobs:
       - name: Extract JFR log
         run: |
           . "$HOME/.benchvars"
-          DOCKER_HOST="$SERVER_HOST:$DOCKER_PORT" docker exec artipie jcmd 1 JFR.dump filename=/var/artipie/.storage/data/chgen/bintest/artipie.jfr
+          DOCKER_HOST="$SERVER_HOST:$DOCKER_PORT" docker exec artipie jcmd 1 JFR.dump filename=/var/artipie/.storage/data/bintest/artipie.jfr
           sleep 30
           rm -fv artipie.jfr artipie.jfr.tar.xz
-          timeout 30 wget "http://$SERVER_HOST:$REPO_PORT/chgen/bintest/artipie.jfr"
+          timeout 30 wget "http://$SERVER_HOST:$REPO_PORT/bintest/artipie.jfr"
           tar cJf artipie.jfr.tar.xz artipie.jfr
         working-directory: benchmarks/loadtests
       - name: Uploading results
