@@ -18,6 +18,10 @@ jobs:
         env:
           GITHUB_TAG: ${{ github.event.head_branch }}
         run: echo "$GITHUB_TAG"
+      - name: Dump GitHub github.event.workflow_run context JSON
+        env:
+          GITHUB_TAG: ${{ toJson(github.event.head_branch) }}
+        run: echo "$GITHUB_TAG"
       - name: Dump job context
         env:
           JOB_CONTEXT: ${{ toJson(job) }}
