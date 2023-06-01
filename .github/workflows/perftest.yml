@@ -117,7 +117,7 @@ jobs:
           git config --global user.email "perftest@test.com"
 
           url="https://central.artipie.com/artipie/benchmarks/localhost/perftests_repo/jfr/artipie.last.jfr.tar.xz"
-          curl -vT "./artipie.jfr.tar.xz" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
+          echo SKIPPING curl -vT "./artipie.jfr.tar.xz" -u"${UPLOAD_LOGIN}:${UPLOAD_PASSWORD}" "$url"
 
           env
           rm -rf "$perfRes"
