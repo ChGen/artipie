@@ -47,11 +47,11 @@ jobs:
 #      - name: 2nd step of stage2
 #        run: env; ls -la; pwd; env > /tmp/perftest2.log; ls -lah >> /tmp/perftest2.log; date>>/tmp/perftest2.log; git show --summary HEAD >> /tmp/perftest2.log; git tag --points-at HEAD >>  /tmp/perftest2.log;
 #      - name: Check variables
-#        run: test ! -f $HOME/.benchvars && exit 1;exit 0
+#        run: test ! -f /opt/.benchvars && exit 1;exit 0
       - name: Check connection
-        run: . "$HOME/.benchvars" && curl -v "http://$SERVER_HOST:$REPO_PORT/bintest"
+        run: . "/opt/.benchvars" && curl -v "http://$SERVER_HOST:$REPO_PORT/bintest"
       - name: Check variables
-        run: test ! -f $HOME/.benchvars && exit 1;exit 0
+        run: test ! -f /opt/.benchvars && exit 1;exit 0
 #      - name: Prepare docker env
 #        run: |
 #          docker info
@@ -83,7 +83,7 @@ jobs:
         working-directory: benchmarks/loadtests
       - name: Run upload test
         run: |
-          . "$HOME/.benchvars"
+          . "/opt/.benchvars"
           perfRes="./_perf_results"
           rm -rf "$perfRes"
           mkdir -p "$perfRes"
@@ -108,7 +108,7 @@ jobs:
 #        working-directory: benchmarks/loadtests
       - name: Extract JFR log
         run: |
-          . "$HOME/.benchvars"
+          . "/opt/.benchvars"
           DOCKER_HOST="$SERVER_HOST:$DOCKER_PORT" docker exec artipie jcmd 1 JFR.dump filename=/var/artipie/.storage/data/bintest/artipie.jfr
           sleep 30
           rm -fv artipie.jfr artipie.jfr.tar.xz
@@ -127,7 +127,7 @@ jobs:
             echo "Error: tag is empty with commit $hash"
             exit 1
           fi
-          . $HOME/.benchvars
+          . /opt/.benchvars
           cd "benchmarks/loadtests"
 
           perftestsRepo='./perftests_repo'
@@ -160,7 +160,7 @@ jobs:
         run: |
           pip3 install packaging==21.3 matplotlib==3.6.3 mdutils==1.6.0
 
-          . "$HOME/.benchvars"
+          . "/opt/.benchvars"
           rm -rfv ./graphs
           time ./perfplot.py perftests_repo/perftests ./graphs
           for f in ./graphs/* ; do
