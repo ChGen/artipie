@@ -83,11 +83,11 @@ jobs:
           tar cJf artipie.jfr.tar.xz artipie.jfr
         working-directory: benchmarks/loadtests
       - name: Uploading results
-        env:
-          GITHUB_TAG: ${{ github.event.workflow_run.head_branch }}
+#        env:
+#          GITHUB_TAG: ${{ github.event.workflow_run.head_branch }}
         run: |
           ls -lah && pwd
-          tag="$GITHUB_TAG"
+          tag="$GITHUB_REF_NAME" # GITHUB_TAG
           if [ -z "$tag" ] ; then
             hash=`git rev-parse HEAD`
             tag="$hash"
