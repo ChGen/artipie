@@ -248,7 +248,7 @@ public final class YamlSettings implements Settings {
         /**
          * Delay in ms.
          */
-        private static final int DELAY = 100;
+        private static final int DELAY = 1;
 
         /**
          * Creating delayed storage.
