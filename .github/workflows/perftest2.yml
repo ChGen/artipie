@@ -4,65 +4,19 @@ on:
   workflow_run:
     workflows: [Prepare Artipie for perftest]
     types: [ completed ]
-#    branches: [ech-dev]
 jobs:
   perf-test2:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: [wsl-client]
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump GitHub github.event.workflow_run head_branch
-        env:
-          GITHUB_TAG: ${{ github.event.workflow_run.head_branch }}
-        run: echo "$GITHUB_TAG"
-      - name: Dump GitHub github.event.workflow_run head_branch JSON
-        env:
-          GITHUB_TAG: ${{ toJson(github.event.workflow_run.head_branch) }}
-        run: echo "$GITHUB_TAG"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJson(runner) }}
-        run: echo "$RUNNER_CONTEXT"
-      - name: Dump strategy context
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run: echo "$STRATEGY_CONTEXT"
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
       - run: env;git branch -a; git status
-#      - run: env
-#        name: 1st step of stage2
-#      - name: 2nd step of stage2
-#        run: env; ls -la; pwd; env > /tmp/perftest2.log; ls -lah >> /tmp/perftest2.log; date>>/tmp/perftest2.log; git show --summary HEAD >> /tmp/perftest2.log; git tag --points-at HEAD >>  /tmp/perftest2.log;
-#      - name: Check variables
-#        run: test ! -f /opt/.benchvars && exit 1;exit 0
       - name: Check connection
         run: . "/opt/.benchvars" && curl -v "http://$SERVER_HOST:$REPO_PORT/bintest"
       - name: Check variables
         run: test ! -f /opt/.benchvars && exit 1;exit 0
-#      - name: Prepare docker env
-#        run: |
-#          docker info
-#          docker stop artipie || :
-#          docker rm -fv artipie || :
-#          docker image rm -f artipie/artipie:1.0-SNAPSHOT || :
-#          docker ps
-#      - name: Maven build
-#        run: mvn clean install
-#      - name: Check docker image
-#        run: docker image inspect artipie/artipie:1.0-SNAPSHOT|head -n50
       - name: Checkout benchmarks repo
         run: git clone --depth=1 https://github.com/chgen/benchmarks.git
       - name: Checkout benchmarks branch
@@ -100,12 +54,6 @@ jobs:
             rm -fv last_test_result
           done
         working-directory: benchmarks/loadtests
-#      - name: Check git tag
-#        run: pwd;ls -lah;git tag -l; git branch -a;git tag --points-at HEAD
-#        working-directory: benchmarks/loadtests
-#      - name: Check env tag
-#        run: bash -c 'echo ${GITHUB_REF##refs/tags/}'
-#        working-directory: benchmarks/loadtests
       - name: Extract JFR log
         run: |
           . "/opt/.benchvars"
@@ -207,7 +155,3 @@ jobs:
           fi
 
           rm -rfv "$tmpDir"
-#        working-directory: benchmarks/loadtests
-#      - name: Stop artipie server?
-#        run: docker ps;echo docker stop artipie; echo rm -rfv root; ls -lah
-#        working-directory: benchmarks/loadtests

@@ -67,12 +67,6 @@ jobs:
             rm -fv last_test_result
           done
         working-directory: benchmarks/loadtests
-#      - name: Check git tag
-#        run: pwd;ls -lah;git tag -l; git branch -a;git tag --points-at HEAD
-#        working-directory: benchmarks/loadtests
-#      - name: Check env tag
-#        run: bash -c 'echo ${GITHUB_REF##refs/tags/}'
-#        working-directory: benchmarks/loadtests
       - name: Extract JFR log
         run: |
           . "/opt/.benchvars"
@@ -83,8 +77,6 @@ jobs:
           tar cJf artipie.jfr.tar.xz artipie.jfr
         working-directory: benchmarks/loadtests
       - name: Uploading results
-#        env:
-#          GITHUB_TAG: ${{ github.event.workflow_run.head_branch }}
         run: |
           ls -lah && pwd
           tag="$GITHUB_REF_NAME" # GITHUB_TAG
