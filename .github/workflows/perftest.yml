@@ -58,9 +58,9 @@ jobs:
           set -x
           for testName in $tests ; do
             echo "Running test $testName for $SERVER_HOST with $REPO_PORT port ..."
-            timeout 111 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 60 maven-dyn
+            timeout 400 "./$testName.sh" "$SERVER_HOST" "$REPO_PORT" 300 maven-dyn
             docker exec artipie jcmd 1 GC.run
-            sleep 5
+            sleep 10
             testRes=`readlink -f last_test_result`
             mv -fv "$testRes" "$perfRes/$testName"
             ls -lah "$perfRes/$testName"
