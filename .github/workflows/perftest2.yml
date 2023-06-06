@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows: [Prepare Artipie for perftest]
     types: [ completed ]
+
 jobs:
   perf-test2:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
