@@ -38,6 +38,7 @@ jobs:
           docker ps
           tree ./root
           ls -lah root/var/repo/artipie
+          exit 1
         working-directory: benchmarks
 
       - name: Prepare JMeter
