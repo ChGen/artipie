@@ -15,7 +15,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
       - run: env;git branch -a; git status
       - name: Check connection
-        run: . "/opt/.benchvars" && curl -v "http://$SERVER_HOST:$REPO_PORT/bintest"
+        run: . "/opt/.benchvars" && timeout 30 curl -v "http://$SERVER_HOST:$REPO_PORT/bintest"
       - name: Check variables
         run: test ! -f /opt/.benchvars && exit 1;exit 0
       - name: Checkout benchmarks repo
