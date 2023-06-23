@@ -157,7 +157,7 @@ jobs:
 
           rm -rfv "$tmpDir"
 
-      - name: Check perfromance difference:
+      - name: Check perfromance difference
         working-directory: benchmarks/loadtests
         run: |
           tag="$GITHUB_TAG"
