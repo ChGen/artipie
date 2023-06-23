@@ -157,7 +157,7 @@ jobs:
 
           rm -rfv "$tmpDir"
 
-      - name: Check perfromance difference
+      - name: Check perfromance difference stability
         working-directory: benchmarks/loadtests
         run: |
           tag="$GITHUB_TAG"
@@ -171,6 +171,6 @@ jobs:
             echo "Performance difference withit limit range"
           else
             echo "WARNING: Performance difference out of range. Sending emails"
-            email="\nArtipie perfrormance testing warning:\n\nPerfromance test results beyond limits. Please check GitHub Actions for Artipie git tag: $tag\n"
+            email="\nArtipie perfrormance testing warning:\n\nPerformance difference out of range. Please check GitHub Actions for Artipie git tag: $tag\n"
             echo -e "$email" | ssmtp artipiebox@gmail.com chgenn.x@gmail.com
           fi
