@@ -137,7 +137,7 @@ jobs:
           rm -rfv "$tmpDir"
           mkdir -p "$tmpDir"
           if [ -n "`find perftests_repo/perftests -maxdepth 1 -name 'v*'`" ] ; then
-            mv -fv "perftests_repo/perftests"/v* "$tmpDir"
+            cp -rfv "perftests_repo/perftests"/v* "$tmpDir"
             rm -rfv ./graphs_v
             time ./perfplot.py "$tmpDir" ./graphs_v
             for f in ./graphs_v/* ; do
@@ -154,7 +154,7 @@ jobs:
           rm -rfv "$tmpDir"
           mkdir -p "$tmpDir"
           if [ -n "`find perftests_repo/perftests -maxdepth 1 -name 't*'`" ] ; then
-            mv -fv "perftests_repo/perftests"/t* "$tmpDir"
+            cp -rfv "perftests_repo/perftests"/t* "$tmpDir"
             rm -rfv ./graphs_t
             time ./perfplot.py "$tmpDir" ./graphs_t
             for f in ./graphs_t/* ; do
@@ -179,6 +179,7 @@ jobs:
             echo "Error: tag is empty with commit $hash"
             exit 1
           fi
+          ls -lah perftests_repo/perftests
           if ./checkstats.py perftests_repo/perftests 1.0 ; then
             echo "Performance difference withit limit range"
           else
