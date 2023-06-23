@@ -39,6 +39,8 @@ jobs:
           tree ./root
           ls -lah root/var/repo/artipie
         working-directory: benchmarks
+      - name: Check connection
+        run: . "/opt/.benchvars" && timeout 30 curl -v "http://$SERVER_HOST:$REPO_PORT/bintest"
 
       - name: Prepare JMeter
         run: |
