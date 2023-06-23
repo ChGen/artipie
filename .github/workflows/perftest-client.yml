@@ -158,6 +158,8 @@ jobs:
           rm -rfv "$tmpDir"
 
       - name: Check perfromance difference stability
+        env:
+          GITHUB_TAG: ${{ github.event.workflow_run.head_branch }}
         working-directory: benchmarks/loadtests
         run: |
           tag="$GITHUB_TAG"
