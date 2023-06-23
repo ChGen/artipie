@@ -38,7 +38,6 @@ jobs:
           docker ps
           tree ./root
           ls -lah root/var/repo/artipie
-          exit 1
         working-directory: benchmarks
 
       - name: Prepare JMeter
@@ -167,3 +166,21 @@ jobs:
           fi
 
           rm -rfv "$tmpDir"
+
+      - name: Check perfromance difference:
+        working-directory: benchmarks/loadtests
+        run: |
+          tag="$GITHUB_REF_NAME" # GITHUB_TAG
+          if [ -z "$tag" ] ; then
+            hash=`git rev-parse HEAD`
+            tag="$hash"
+            echo "Error: tag is empty with commit $hash"
+            exit 1
+          fi
+          if ./checkstats.py perftests_repo/perftests 1.0 ; then
+            echo "Performance difference withit limit range"
+          else
+            echo "WARNING: Performance difference out of range. Sending emails"
+            email="\nArtipie perfrormance testing warning:\n\nPerfromance test results beyond limits. Please check GitHub Actions for Artipie git tag: $tag\n"
+            echo -e "$email" | ssmtp artipiebox@gmail.com chgenn.x@gmail.com
+          fi
