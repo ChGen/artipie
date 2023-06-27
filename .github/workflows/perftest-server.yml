@@ -196,7 +196,7 @@ jobs:
           if ./checkstats.py perftests_repo/perftests 1.0 ; then # TODO: 3 types of tags: *;v*;t*;...
             echo "Performance difference withit limit range"
           else
-            echo "WARNING: Performance difference out of range. Sending emails"
+            echo "WARNING: Performance difference out of range. Sending emails..."
             email="\nArtipie perfrormance testing warning:\n\nPerformance difference out of range. Please check GitHub Actions for Artipie git tag: $tag; commit hash: $hash\n"
             echo -e "$email" | ssmtp artipiebox@gmail.com chgenn.x@gmail.com
           fi
