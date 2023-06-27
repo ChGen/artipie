@@ -163,16 +163,30 @@ jobs:
         working-directory: benchmarks/loadtests
         run: |
           tag="$GITHUB_TAG"
+          hash=`git rev-parse HEAD`
           if [ -z "$tag" ] ; then
-            hash=`git rev-parse HEAD`
             tag="$hash"
             echo "Error: tag is empty with commit $hash"
             exit 1
           fi
-          if ./checkstats.py perftests_repo/perftests 1.0 ; then
+
+          tmpDir="perftests_repo/tmp" # compare with previous tag of the same type
+          rm -rfv "$tmpDir"
+          mkdir -p "$tmpDir"
+          if [[ "$tag" =~ ^v.*$ ]] ; then
+            cp -rfv "perftests_repo/perftests"/v* "$tmpDir"
+          elif [[ "$tag" =~ ^t.*$ ]] ; then
+            cp -rfv "perftests_repo/perftests"/t* "$tmpDir"
+          else
+            cp -rfv "perftests_repo/perftests"/* "$tmpDir"
+          fi
+
+          ls -lah perftests_repo/perftests
+          if ./checkstats.py perftests_repo/perftests 1.0 ; then # TODO: 3 types of tags: *;v*;t*;...
             echo "Performance difference withit limit range"
           else
-            echo "WARNING: Performance difference out of range. Sending emails"
-            email="\nArtipie perfrormance testing warning:\n\nPerformance difference out of range. Please check GitHub Actions for Artipie git tag: $tag\n"
+            echo "WARNING: Performance difference out of range. Sending emails..."
+            email="\nArtipie perfrormance testing warning:\n\nPerformance difference out of range. Please check GitHub Actions for Artipie git tag: $tag; commit hash: $hash\n"
             echo -e "$email" | ssmtp artipiebox@gmail.com chgenn.x@gmail.com
           fi
+          rm -rf "$tmpDir"
