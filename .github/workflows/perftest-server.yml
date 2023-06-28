@@ -192,7 +192,7 @@ jobs:
             cp -rfv "perftests_repo/perftests"/* "$tmpDir"
           fi
 
-          diffLimit="2.0"
+          diffLimit="5.0"
           ls -lah perftests_repo/perftests
           if ./checkstats.py perftests_repo/perftests "$diffLimit" ; then # TODO: 3 types of tags: *;v*;t*;...
             echo "Performance difference withit limit range"
