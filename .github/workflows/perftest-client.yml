@@ -187,7 +187,7 @@ jobs:
             echo "Performance difference withit limit range"
           else
             echo "WARNING: Performance difference out of range. Sending emails..."
-            email="\nArtipie perfrormance testing warning:\n\nPerformance difference is out of range in perftest-client.yml with threshold ${diffLimit}%.
+            email="Subject: Artipie perftests\n\nArtipie perfrormance testing warning:\n\nPerformance difference is out of range in perftest-client.yml with threshold ${diffLimit}%.
               Please check GitHub Actions logs for Artipie git tag: $tag; commit hash: $hash\n"
             echo -e "$email" | ssmtp artipiebox@gmail.com chgenn.x@gmail.com
           fi
